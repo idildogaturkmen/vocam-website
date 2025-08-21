@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Confirmed - Vocam</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="vocam_64x64.png">
+    <link rel="shortcut icon" href="vocam_64x64.png">
+    <link rel="apple-touch-icon" href="vocam-transparent.png">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            font-weight: 400;
+            background: linear-gradient(135deg, #074173, #1679AB);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        :root {
+            --primary-dark: #074173;
+            --primary-medium: #1679AB;
+            --accent-light: #5DEBD7;
+            --accent-lighter: #C5FF95;
+            --text-light: #FFFFFF;
+            --text-dark: #1a1a1a;
+            --text-muted: #6b7280;
+            --success: #10b981;
+            --error: #ef4444;
+        }
+        
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .confirmation-card {
+            background: white;
+            padding: 3rem 2.5rem;
+            border-radius: 25px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-family: 'Arial', sans-serif;
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--primary-dark);
+            margin-bottom: 2rem;
+        }
+        
+        .logo img {
+            height: 60px;
+            width: 60px;
+            object-fit: contain;
+        }
+        
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--success);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            animation: scaleIn 0.6s ease-out;
+        }
+        
+        .success-icon::after {
+            content: "✓";
+            color: white;
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+        
+        .error-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--error);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            animation: scaleIn 0.6s ease-out;
+        }
+        
+        .error-icon::after {
+            content: "✗";
+            color: white;
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+        
+        .title {
+            color: var(--primary-dark);
+            font-family: 'Arial', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+        
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .btn-primary {
+            background: var(--primary-medium);
+            color: white;
+            padding: 16px 32px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(7, 65, 115, 0.3);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: var(--primary-medium);
+            padding: 16px 32px;
+            border: 2px solid var(--primary-medium);
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .btn-secondary:hover {
+            background: var(--primary-medium);
+            color: white;
+            transform: translateY(-1px);
+        }
+        
+        .app-download-section {
+            margin-top: 2.5rem;
+            padding-top: 2rem;
+            border-top: 1px solid #e5e7eb;
+        }
+        
+        .app-download-title {
+            color: var(--text-dark);
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        
+        .download-notice {
+            background: linear-gradient(45deg, var(--accent-light), var(--accent-lighter));
+            color: var(--primary-dark);
+            padding: 1rem 1.5rem;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+        
+        .help-section {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #f3f4f6;
+        }
+        
+        .help-text {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+        
+        .contact-link {
+            color: var(--primary-medium);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .contact-link:hover {
+            color: var(--primary-dark);
+        }
+        
+        /* Loading state */
+        .loading {
+            display: none;
+        }
+        
+        .loading.active {
+            display: block;
+        }
+        
+        .loading .spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(7, 65, 115, 0.3);
+            border-top: 4px solid var(--primary-dark);
+            border-radius: 50%;
+            animation: spin 1.5s linear infinite;
+            margin: 0 auto 1rem;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @keyframes scaleIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        /* Hidden states */
+        .success-state,
+        .error-state {
+            display: none;
+        }
+        
+        .success-state.active,
+        .error-state.active {
+            display: block;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .confirmation-card {
+                margin: 1rem;
+                padding: 2rem 1.5rem;
+            }
+            
+            .title {
+                font-size: 1.6rem;
+            }
+            
+            .subtitle {
+                font-size: 1rem;
+            }
+            
+            .action-buttons {
+                gap: 0.8rem;
+            }
+            
+            .btn-primary,
+            .btn-secondary {
+                padding: 14px 24px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="confirmation-card">
+            <!-- Logo -->
+            <div class="logo">
+                <img src="vocam-transparent.png" alt="Vocam Logo">
+                Vocam
+            </div>
+
+            <!-- Loading State -->
+            <div class="loading active" id="loadingState">
+                <div class="spinner"></div>
+                <h2 class="title">Confirming Your Email...</h2>
+                <p class="subtitle">Please wait while we verify your account.</p>
+            </div>
+
+            <!-- Success State -->
+            <div class="success-state" id="successState">
+                <div class="success-icon"></div>
+                <h2 class="title">Email Confirmed!</h2>
+                <p class="subtitle">Your account has been successfully verified. Get ready to start learning languages with the Vocam mobile app!</p>
+                
+                <div class="action-buttons">
+                    <button class="btn-primary" id="downloadAppBtn">Download Vocam</button>
+                </div>
+
+                <div class="app-download-section">
+                    <div class="download-notice">
+                        The full Vocam experience is coming soon to Google Play Store! You'll be able to use your camera to detect objects and learn vocabulary in 44+ languages.
+                    </div>
+                    <div style="margin-top: 1rem; padding: 1rem; background: #f8f9fa; border-radius: 10px; font-size: 0.9rem; color: #6b7280;">
+                        <strong>📧 You'll be notified via email when the app is available for download.</strong>
+                    </div>
+                </div>
+
+                <div class="help-section">
+                    <p class="help-text">
+                        Need help? <a href="mailto:idil08idil@gmail.com" class="contact-link">Contact support</a>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Error State -->
+            <div class="error-state" id="errorState">
+                <div class="error-icon"></div>
+                <h2 class="title">Confirmation Failed</h2>
+                <p class="subtitle">We couldn't verify your email. The link may have expired or already been used.</p>
+                
+                <div class="action-buttons">
+                    <button class="btn-primary" id="downloadAppBtnError">Try Mobile App</button>
+                    <a href="/web" class="btn-secondary">Try Web Version</a>
+                </div>
+
+                <div class="help-section">
+                    <p class="help-text">
+                        Still having trouble? <a href="mailto:idil08idil@gmail.com" class="contact-link">Contact support</a> for assistance.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Get URL parameters to check confirmation status
+        const urlParams = new URLSearchParams(window.location.search);
+        const confirmationType = urlParams.get('type');
+        const token = urlParams.get('token');
+        const error = urlParams.get('error');
+        const errorDescription = urlParams.get('error_description');
+
+        // Elements
+        const loadingState = document.getElementById('loadingState');
+        const successState = document.getElementById('successState');
+        const errorState = document.getElementById('errorState');
+
+        // Simulate processing delay for better UX
+        setTimeout(() => {
+            loadingState.classList.remove('active');
+            
+            // Check if there's an error parameter
+            if (error || errorDescription) {
+                // Show error state
+                errorState.classList.add('active');
+                console.log('Email confirmation failed:', error, errorDescription);
+            } else if (confirmationType === 'signup' || token) {
+                // Show success state for signup confirmation or if token is present
+                successState.classList.add('active');
+                console.log('Email confirmation successful');
+            } else {
+                // Default to success if no specific error indicators
+                successState.classList.add('active');
+                console.log('Email confirmation completed');
+            }
+        }, 2000);
+
+        // Track page view for analytics (optional)
+        if (typeof gtag !== 'undefined') {
+            gtag('event', 'page_view', {
+                page_title: 'Email Confirmation',
+                page_location: window.location.href
+            });
+        }
+
+        // Handle back button navigation
+        window.addEventListener('popstate', function(event) {
+            // Redirect to home if user hits back button
+            window.location.href = '/';
+        });
+
+        // Handle download app buttons
+        function setupDownloadButtons() {
+            const downloadBtns = document.querySelectorAll('#downloadAppBtn, #downloadAppBtnError');
+            
+            downloadBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // TODO: Replace with actual Play Store URL when app is published
+                    // Update the package name in the URL below to match your app's package name
+                    // From app.config.js: "com.yourcompany.vocamlearning" 
+                    const playStoreUrl = 'https://play.google.com/store/apps/details?id=app.vocam';
+                    
+                    // For now, show a message that the app is coming soon
+                    // When the app is published, remove this alert and uncomment the redirect below
+                    
+                    alert('📱 Vocam mobile app is coming soon to Google Play Store!\n\n✅ Your email is confirmed and ready.');
+                    
+                    // Uncomment this line when the app is published:
+                    // window.open(playStoreUrl, '_blank');
+                });
+            });
+        }
+
+        // Initialize download buttons after page loads
+        setTimeout(() => {
+            setupDownloadButtons();
+        }, 2100);
+    </script>
+</body>
+</html>

@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy - Vocam</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="vocam_64x64.png">
+    <link rel="shortcut icon" href="vocam_64x64.png">
+    <link rel="apple-touch-icon" href="vocam-transparent.png">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            font-weight: 400;
+        }
+        
+        :root {
+            --primary-dark: #074173;
+            --primary-medium: #1679AB;
+            --accent-light: #5DEBD7;
+            --accent-lighter: #C5FF95;
+            --text-light: #FFFFFF;
+            --text-dark: #1a1a1a;
+            --text-muted: #6b7280;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header */
+        header {
+            background: var(--primary-dark);
+            color: white;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-family: 'Arial', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--text-light);
+            text-decoration: none;
+        }
+        
+        .logo img {
+            height: 65px;
+            width: 65px;
+            object-fit: contain;
+        }
+        
+        .back-link {
+            background: transparent;
+            border: 1px solid var(--accent-light);
+            color: var(--accent-light);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+        
+        .back-link:hover {
+            background: var(--accent-light);
+            color: var(--primary-dark);
+        }
+        
+        /* Main Content */
+        main {
+            padding: 3rem 0;
+            background: #fafbfc;
+            min-height: calc(100vh - 120px);
+        }
+        
+        .content-wrapper {
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+        
+        .page-title {
+            color: var(--primary-dark);
+            font-family: 'Arial', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        
+        .last-updated {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .section {
+            margin-bottom: 2.5rem;
+        }
+        
+        .section-title {
+            color: var(--primary-dark);
+            font-family: 'Arial', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--accent-light);
+            padding-left: 1rem;
+        }
+        
+        .subsection-title {
+            color: var(--primary-medium);
+            font-family: 'Arial', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 1.5rem 0 0.8rem 0;
+        }
+        
+        .section p {
+            color: var(--text-dark);
+            font-size: 1rem;
+            line-height: 1.7;
+            margin-bottom: 1rem;
+        }
+        
+        .section ul {
+            margin: 1rem 0 1rem 2rem;
+        }
+        
+        .section li {
+            color: var(--text-dark);
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 0.5rem;
+        }
+        
+        .contact-info {
+            background: linear-gradient(135deg, var(--primary-medium), var(--primary-dark));
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            margin-top: 3rem;
+        }
+        
+        .contact-info h3 {
+            font-family: 'Arial', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--accent-light);
+        }
+        
+        .contact-info a {
+            color: var(--accent-light);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .contact-info a:hover {
+            color: var(--accent-lighter);
+        }
+        
+        /* Footer */
+        footer {
+            background: var(--primary-dark);
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .content-wrapper {
+                margin: 1rem;
+                padding: 2rem 1.5rem;
+            }
+            
+            .page-title {
+                font-size: 2rem;
+            }
+            
+            .section-title {
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <nav class="container">
+            <a href="/" class="logo">
+                <img src="vocam-transparent.png" alt="Vocam Logo">
+                Vocam
+            </a>
+            <a href="/" class="back-link">← Back to Home</a>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <div class="container">
+            <div class="content-wrapper">
+                <h1 class="page-title">Privacy Policy</h1>
+                <div class="last-updated">
+                    <strong>Effective Date:</strong> August 12, 2025<br>
+                    <strong>Last Updated:</strong> August 12, 2025
+                </div>
+
+                <div class="section">
+                    <h2 class="section-title">Introduction</h2>
+                    <p>Vocam is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our mobile application Vocam.</p>
+                    <p><strong>By using Vocam, you consent to the collection and use of your information as described in this Privacy Policy.</strong></p>
+                </div>
+
+                <div class="section">
+                    <h2 class="section-title">Information We Collect</h2>
+                    
+                    <h3 class="subsection-title">Information You Provide Directly</h3>
+                    <ul>
+                        <li><strong>Account Information:</strong> Email address, username, and profile information when you create an account</li>
+                        <li><strong>Learning Progress:</strong> Your vocabulary learning progress, quiz results, and achievement data</li>
+                        <li><strong>Feedback:</strong> Comments, reviews, and communications you send to us</li>
+                    </ul>
+
+                    <h3 class="subsection-title">Information Collected Automatically</h3>
+                    <ul>
+                        <li><strong>Camera Data:</strong> Images captured for object detection are processed locally on your device and are not stored or transmitted to our servers</li>
+                        <li><strong>Audio Data:</strong> Voice recordings for pronunciation practice are processed locally and are not stored or transmitted to our servers</li>
+                        <li><strong>Usage Data:</strong> App usage statistics, feature interactions, and performance data</li>
+                        <li><strong>Device Information:</strong> Device model, operating system, app version, and unique device identifiers</li>
+                    </ul>
+                </div>
+
+                <div class="section">
+                    <h2 class="section-title">How We Use Your Information</h2>
+                    <p>We use the collected information to:</p>
+                    <ul>
+                        <li>Provide and maintain the language learning service</li>
+                        <li>Track your learning progress and personalize your experience</li>
+                        <li>Improve object detection and pronunciation features</li>
+                        <li>Analyze app usage to enhance user experience</li>
+                        <li>Send important updates and notifications</li>
+                        <li>Provide customer support</li>
+                    </ul>
+                </div>
+
+                <div class="section">
+                    <h2 class="section-title">Third-Party Services</h2>
+                    <p>Vocam integrates with the following third-party services:</p>
+                    <ul>
+                        <li><strong>Google Cloud Vision API:</strong> For object detection (images processed on Google's servers)</li>
+                        <li><strong>Google Cloud Speech-to-Text API:</strong> For speech recognition (audio processed on Google's servers)</li>
+                        <li><strong>Google Cloud Text-to-Speech API:</strong> For pronunciation audio generation</li>
+                        <li><strong>Supabase:</strong> For user data storage and authentication</li>
+                    </ul>
+                    <p>These services have their own privacy policies governing the use of your information.</p>
+                </div>
+
+                <div class="section">
+                    <h2 class="section-title">Data Security</h2>
+                    <p>We implement appropriate technical and organizational security measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction. However, no method of transmission over the Internet or electronic storage is 100% secure.</p>
+                </div>
+
+                <div class="section">
+                    <h2 class="section-title">Data Retention</h2>
+                    <p>We retain your information for the following periods:</p>
+                    <ul>
+                        <li><strong>Account Data:</strong> Retained until you delete your account</li>
+                        <li><strong>Learning Progress Data:</strong> Retained until account deletion</li>
+                        <li><strong>Camera/Audio Data:</strong> Not stored beyond processing for immediate feature functionality</li>
+                        <li><strong>Usage Analytics:</strong> Retained for 24 months</li>
+                        <li><strong>Device Information:</strong> Retained for 12 months</li>
+                    </ul>
+                </div>
+
+                <div class="section">
+                    <h2 class="section-title">Your Privacy Rights</h2>
+                    <p>You have the right to:</p>
+                    <ul>
+                        <li>Access your personal information</li>
+                        <li>Update or correct your information</li>
+                        <li>Delete your account and associated data</li>
+                        <li>Opt-out of non-essential communications</li>
+                        <li>Request data portability</li>
+                    </ul>
+                    <p>To exercise these rights, contact us at: <a href="mailto:idil08idil@gmail.com" style="color: var(--primary-medium); font-weight: 500;">idil08idil@gmail.com</a></p>
+                </div>
+
+                <div class="section">
+                    <h2 class="section-title">Children's Privacy</h2>
+                    <p>Vocam is designed for users of all ages. We do not knowingly collect personal information from children under 13 without parental consent. If you believe we have collected such information, please contact us immediately.</p>
+                </div>
+
+                <div class="section">
+                    <h2 class="section-title">California Privacy Rights</h2>
+                    <p>If you are a California resident, you have additional rights under the California Consumer Privacy Act (CCPA):</p>
+                    <ul>
+                        <li>Right to know what personal information is collected</li>
+                        <li>Right to delete personal information</li>
+                        <li>Right to opt-out of the sale of personal information (we do not sell personal information)</li>
+                        <li>Right to non-discrimination for exercising your privacy rights</li>
+                    </ul>
+                </div>
+
+                <div class="section">
+                    <h2 class="section-title">International Data Transfers</h2>
+                    <p>Your information may be transferred to and processed in countries other than your own. We ensure appropriate safeguards are in place for such transfers in compliance with applicable data protection laws.</p>
+                </div>
+
+                <div class="section">
+                    <h2 class="section-title">Changes to This Privacy Policy</h2>
+                    <p>We may update this Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page and updating the "Last Updated" date. We will also notify you via email or through the app for significant changes.</p>
+                </div>
+
+                <div class="contact-info">
+                    <h3>Contact Us</h3>
+                    <p>If you have questions about this Privacy Policy, please contact us at:</p>
+                    <p>
+                        <strong>Email:</strong> <a href="mailto:idil08idil@gmail.com">idil08idil@gmail.com</a><br>
+                        <strong>Website:</strong> <a href="https://vocam.app">vocam.app</a><br>
+                        <strong>Address:</strong> California, United States
+                    </p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Vocam. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

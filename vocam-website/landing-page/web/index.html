@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vocam - Learn Languages Through Object Detection</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="../vocam_64x64.png">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #fafbfc;
+        }
+        
+        :root {
+            --primary-dark: #074173;
+            --primary-medium: #1679AB;
+            --accent-light: #5DEBD7;
+            --accent-lighter: #C5FF95;
+            --text-light: #FFFFFF;
+            --text-dark: #1a1a1a;
+            --text-muted: #6b7280;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+        }
+        
+        /* Header */
+        .header {
+            background: var(--primary-dark);
+            color: white;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+        }
+        
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        
+        .logo img {
+            height: 65px;
+            width: 65px;
+            object-fit: contain;
+        }
+        
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .back-link, .logout-btn {
+            background: transparent;
+            border: 1px solid var(--accent-light);
+            color: var(--accent-light);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+        
+        .back-link:hover, .logout-btn:hover {
+            background: var(--accent-light);
+            color: var(--primary-dark);
+        }
+
+        /* App Container for iframe */
+        .app-container {
+            display: none;
+            width: 100%;
+            height: calc(100vh - 80px);
+            position: relative;
+        }
+        
+        .app-container.active {
+            display: block;
+        }
+        
+        .app-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: white;
+        }
+        
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+        }
+        
+        .loading-overlay.hidden {
+            display: none;
+        }
+        
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(7, 65, 115, 0.3);
+            border-top: 4px solid var(--primary-dark);
+            border-radius: 50%;
+            animation: spin 1.5s linear infinite;
+            margin: 0 auto 1rem;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .loading-text {
+            color: var(--primary-dark);
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .loading-subtext {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+        
+        /* Auth Section */
+        .auth-section {
+            max-width: 450px;
+            margin: 2rem auto;
+            background: white;
+            padding: 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+            text-align: center;
+        }
+        
+        .auth-title {
+            color: var(--primary-dark);
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .auth-subtitle {
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            font-size: 0.95rem;
+        }
+        
+        /* Custom Auth Form */
+        .auth-form {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-medium);
+            box-shadow: 0 0 0 3px rgba(22, 121, 171, 0.1);
+        }
+        
+        .form-button {
+            width: 100%;
+            padding: 12px 24px;
+            background: var(--primary-medium);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-family: inherit;
+        }
+        
+        .form-button:hover {
+            background: var(--primary-dark);
+        }
+        
+        .form-button:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+        }
+        
+        .auth-toggle {
+            margin-top: 1.5rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+        
+        .auth-toggle a {
+            color: var(--primary-medium);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .auth-toggle a:hover {
+            color: var(--primary-dark);
+        }
+        
+        .error-message {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+            border-radius: 8px;
+            padding: 12px;
+            margin: 1rem 0;
+            font-size: 0.9rem;
+        }
+        
+        .success-message {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+            border-radius: 8px;
+            padding: 12px;
+            margin: 1rem 0;
+            font-size: 0.9rem;
+        }
+        
+        /* Loading states */
+        .auth-loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem;
+            color: var(--success);
+        }
+        
+        .auth-loading .spinner {
+            width: 50px;
+            height: 50px;
+            border-color: var(--success);
+            border-top-color: transparent;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .auth-section {
+                margin: 1rem;
+                padding: 2rem 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header" id="mainHeader">
+        <div class="header-content">
+            <div class="logo">
+                <img src="../vocam-transparent.png" alt="Vocam Logo">
+                <span>Vocam</span>
+            </div>
+            <div class="user-menu">
+                <a href="../" class="back-link" id="backLink">← Back to Home</a>
+                <div id="userButtonContainer" style="display: none;">
+                    <span id="userEmail" style="margin-right: 1rem; color: var(--accent-light);"></span>
+                    <button class="logout-btn" onclick="handleSignOut()">Sign Out</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- App Container -->
+    <div class="app-container" id="appContainer">
+        <div class="loading-overlay" id="loadingOverlay">
+            <div class="spinner"></div>
+            <div class="loading-text">Loading Vocam App...</div>
+            <div class="loading-subtext">Setting up your learning environment</div>
+        </div>
+        <iframe 
+            id="vocamAppIframe" 
+            class="app-iframe"
+            src=""
+            title="Vocam Learning App"
+            allow="camera; microphone; geolocation">
+        </iframe>
+    </div>
+
+    <!-- Authentication Section -->
+    <section class="auth-section" id="authSection">
+        <h1 class="auth-title">Welcome to Vocam</h1>
+        <p class="auth-subtitle">Learn vocabulary through AI-powered object detection</p>
+        
+        <div id="authContainer">
+            <!-- Sign In Form -->
+            <div id="signInForm" class="auth-form">
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="loginEmail" class="form-label">Email</label>
+                        <input type="email" id="loginEmail" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword" class="form-label">Password</label>
+                        <input type="password" id="loginPassword" class="form-input" required>
+                    </div>
+                    <button type="submit" class="form-button" id="loginButton">Sign In</button>
+                </form>
+                <div class="auth-toggle">
+                    Don't have an account? <a href="#" onclick="toggleAuthForm('signup')">Sign Up</a>
+                </div>
+            </div>
+
+            <!-- Sign Up Form -->
+            <div id="signUpForm" class="auth-form" style="display: none;">
+                <form id="registerForm">
+                    <div class="form-group">
+                        <label for="registerEmail" class="form-label">Email</label>
+                        <input type="email" id="registerEmail" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerPassword" class="form-label">Password</label>
+                        <input type="password" id="registerPassword" class="form-input" required minlength="6">
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmPassword" class="form-label">Confirm Password</label>
+                        <input type="password" id="confirmPassword" class="form-input" required minlength="6">
+                    </div>
+                    <button type="submit" class="form-button" id="registerButton">Create Account</button>
+                </form>
+                <div class="auth-toggle">
+                    Already have an account? <a href="#" onclick="toggleAuthForm('signin')">Sign In</a>
+                </div>
+            </div>
+
+            <!-- Messages -->
+            <div id="authMessage"></div>
+        </div>
+    </section>
+
+    <!-- Load Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script>
+        // Your Supabase configuration
+        const SUPABASE_URL = 'https://csszlzpsfwmsezursivk.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNzc3psenBzZndtc2V6dXJzaXZrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA1Mjg1MjEsImV4cCI6MjA2NjEwNDUyMX0.gIi0Q_pifYpXeM1r8kWlgTO1LD8bc91lQ3suH8OWDKI';
+        const STREAMLIT_APP_URL = 'https://vocam.app/app/';
+        
+        // Global variables
+        let supabase = null;
+        let currentUser = null;
+        
+        console.log('🟢 Vocam Supabase Authentication Starting');
+        
+        // Initialize Supabase
+        async function initializeSupabase() {
+            try {
+                console.log('🔄 Initializing Supabase client...');
+                
+                // Create Supabase client
+                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                
+                console.log('✅ Supabase client created successfully');
+                
+                // Listen for authentication state changes
+                supabase.auth.onAuthStateChange((event, session) => {
+                    console.log('🔄 Auth state changed:', event);
+                    
+                    if (event === 'SIGNED_IN' && session) {
+                        console.log('✅ User signed in:', session.user.email);
+                        handleUserSignIn(session.user, session.access_token);
+                    } else if (event === 'SIGNED_OUT') {
+                        console.log('👋 User signed out');
+                        handleUserSignOut();
+                    }
+                });
+                
+                // Check if user is already signed in
+                const { data: { session } } = await supabase.auth.getSession();
+                if (session && session.user) {
+                    console.log('✅ User already signed in:', session.user.email);
+                    handleUserSignIn(session.user, session.access_token);
+                }
+                
+                // Set up form handlers
+                setupFormHandlers();
+                
+            } catch (error) {
+                console.error('❌ Supabase initialization error:', error);
+                showMessage('Failed to initialize authentication. Please refresh the page.', 'error');
+            }
+        }
+        
+        // Setup form handlers
+        function setupFormHandlers() {
+            // Login form
+            document.getElementById('loginForm').addEventListener('submit', handleLogin);
+            
+            // Register form
+            document.getElementById('registerForm').addEventListener('submit', handleRegister);
+        }
+        
+        // Handle login
+        async function handleLogin(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            const button = document.getElementById('loginButton');
+            
+            try {
+                button.disabled = true;
+                button.textContent = 'Signing In...';
+                
+                const { data, error } = await supabase.auth.signInWithPassword({
+                    email,
+                    password
+                });
+                
+                if (error) {
+                    throw error;
+                }
+                
+                // Success is handled by onAuthStateChange
+                
+            } catch (error) {
+                console.error('❌ Login error:', error);
+                showMessage(error.message || 'Login failed. Please try again.', 'error');
+            } finally {
+                button.disabled = false;
+                button.textContent = 'Sign In';
+            }
+        }
+        
+        // Handle registration
+        async function handleRegister(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const button = document.getElementById('registerButton');
+            
+            // Validate passwords match
+            if (password !== confirmPassword) {
+                showMessage('Passwords do not match.', 'error');
+                return;
+            }
+            
+            try {
+                button.disabled = true;
+                button.textContent = 'Creating Account...';
+                
+                const { data, error } = await supabase.auth.signUp({
+                    email,
+                    password,
+                    options: {
+                        emailRedirectTo: window.location.origin + '/web'
+                    }
+                });
+                
+                if (error) {
+                    throw error;
+                }
+                
+                if (data.user && !data.session) {
+                    // Email confirmation required
+                    showMessage('Please check your email and click the confirmation link to activate your account.', 'success');
+                } else {
+                    // Auto-signed in (if email confirmation is disabled)
+                    showMessage('Account created successfully!', 'success');
+                }
+                
+            } catch (error) {
+                console.error('❌ Registration error:', error);
+                showMessage(error.message || 'Registration failed. Please try again.', 'error');
+            } finally {
+                button.disabled = false;
+                button.textContent = 'Create Account';
+            }
+        }
+        
+        // Toggle between sign in and sign up forms
+        function toggleAuthForm(type) {
+            const signInForm = document.getElementById('signInForm');
+            const signUpForm = document.getElementById('signUpForm');
+            
+            if (type === 'signup') {
+                signInForm.style.display = 'none';
+                signUpForm.style.display = 'block';
+            } else {
+                signInForm.style.display = 'block';
+                signUpForm.style.display = 'none';
+            }
+            
+            // Clear any messages
+            document.getElementById('authMessage').innerHTML = '';
+        }
+        
+        // Show message
+        function showMessage(message, type = 'error') {
+            const messageDiv = document.getElementById('authMessage');
+            const className = type === 'error' ? 'error-message' : 'success-message';
+            
+            messageDiv.innerHTML = `
+                <div class="${className}">
+                    ${message}
+                </div>
+            `;
+        }
+        
+        // Handle user sign in
+        function handleUserSignIn(user, accessToken) {
+            currentUser = user;
+            
+            console.log('🎉 Authentication successful for:', user.email);
+            
+            // Update header
+            document.getElementById('userEmail').textContent = user.email;
+            document.getElementById('backLink').style.display = 'none';
+            document.getElementById('userButtonContainer').style.display = 'flex';
+            
+            // Show success message with loading
+            document.getElementById('authContainer').innerHTML = `
+                <div class="auth-loading">
+                    <div class="spinner"></div>
+                    <h3 style="color: var(--success); margin: 1rem 0 0.5rem;">Welcome to Vocam!</h3>
+                    <p style="color: var(--text-muted);">Setting up your learning environment...</p>
+                </div>
+            `;
+            
+            // Launch Streamlit app after a short delay
+            setTimeout(() => {
+                launchStreamlitApp(user, accessToken);
+            }, 2000);
+        }
+        
+        // Handle user sign out
+        function handleUserSignOut() {
+            currentUser = null;
+            
+            console.log('👋 User signed out');
+            
+            // Update header
+            document.getElementById('userEmail').textContent = '';
+            document.getElementById('backLink').style.display = 'inline-block';
+            document.getElementById('userButtonContainer').style.display = 'none';
+            
+            // Show auth section, hide app
+            document.getElementById('authSection').style.display = 'block';
+            document.getElementById('appContainer').classList.remove('active');
+            
+            // Reset auth container
+            location.reload(); // Simple way to reset the auth forms
+        }
+        
+        // Sign out function
+        async function handleSignOut() {
+            try {
+                console.log('👋 Signing out user...');
+                await supabase.auth.signOut();
+            } catch (error) {
+                console.error('❌ Sign out error:', error);
+                // Force sign out on UI level
+                handleUserSignOut();
+            }
+        }
+        
+        // Launch Streamlit app
+        function launchStreamlitApp(user, accessToken) {
+            try {
+                console.log('🚀 Launching Streamlit app...');
+                
+                // Create URL with authentication parameters
+                const streamlitUrl = new URL('https://vocamm.streamlit.app/');
+                streamlitUrl.searchParams.set('auth_token', accessToken);
+                streamlitUrl.searchParams.set('auth_provider', 'supabase');
+                streamlitUrl.searchParams.set('user_email', user.email);
+                streamlitUrl.searchParams.set('user_id', user.id);
+                
+                // Redirect with authentication parameters
+                window.location.href = streamlitUrl.toString();
+                
+            } catch (error) {
+                console.error('❌ Error launching Streamlit app:', error);
+                showMessage('Failed to launch the learning app. Please try again.', 'error');
+            }
+        }
+
+        
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('📄 Page loaded - initializing Supabase authentication');
+            initializeSupabase();
+        });
+        
+        // Handle page visibility changes for better UX
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden && currentUser) {
+                console.log('👀 Page visible - checking auth status');
+                supabase.auth.getSession();
+            }
+        });
+    </script>
+</body>
+</html>

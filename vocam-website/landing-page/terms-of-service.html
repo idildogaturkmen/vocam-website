@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms of Service - Vocam</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="vocam_64x64.png">
+    <link rel="shortcut icon" href="vocam_64x64.png">
+    <link rel="apple-touch-icon" href="vocam-transparent.png">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            font-weight: 400;
+        }
+        
+        :root {
+            --primary-dark: #074173;
+            --primary-medium: #1679AB;
+            --accent-light: #5DEBD7;
+            --accent-lighter: #C5FF95;
+            --text-light: #FFFFFF;
+            --text-dark: #1a1a1a;
+            --text-muted: #6b7280;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header */
+        header {
+            background: var(--primary-dark);
+            color: white;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-family: 'Arial', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--text-light);
+            text-decoration: none;
+        }
+        
+        .logo img {
+            height: 65px;
+            width: 65px;
+            object-fit: contain;
+        }
+        
+        .back-link {
+            background: transparent;
+            border: 1px solid var(--accent-light);
+            color: var(--accent-light);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+        
+        .back-link:hover {
+            background: var(--accent-light);
+            color: var(--primary-dark);
+        }
+        
+        /* Main Content */
+        main {
+            padding: 3rem 0;
+            background: #fafbfc;
+            min-height: calc(100vh - 120px);
+        }
+        
+        .content-wrapper {
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+        
+        .page-title {
+            color: var(--primary-dark);
+            font-family: 'Arial', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        
+        .last-updated {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .section {
+            margin-bottom: 2.5rem;
+        }
+        
+        .section-title {
+            color: var(--primary-dark);
+            font-family: 'Arial', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--accent-light);
+            padding-left: 1rem;
+        }
+        
+        .subsection-title {
+            color: var(--primary-medium);
+            font-family: 'Arial', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 1.5rem 0 0.8rem 0;
+        }
+        
+        .section p {
+            color: var(--text-dark);
+            font-size: 1rem;
+            line-height: 1.7;
+            margin-bottom: 1rem;
+        }
+        
+        .section ul {
+            margin: 1rem 0 1rem 2rem;
+        }
+        
+        .section li {
+            color: var(--text-dark);
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 0.5rem;
+        }
+        
+        .contact-info {
+            background: linear-gradient(135deg, var(--primary-medium), var(--primary-dark));
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            margin-top: 3rem;
+        }
+        
+        .contact-info h3 {
+            font-family: 'Arial', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--accent-light);
+        }
+        
+        .contact-info a {
+            color: var(--accent-light);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .contact-info a:hover {
+            color: var(--accent-lighter);
+        }
+        
+        /* Footer */
+        footer {
+            background: var(--primary-dark);
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .content-wrapper {
+                margin: 1rem;
+                padding: 2rem 1.5rem;
+            }
+            
+            .page-title {
+                font-size: 2rem;
+            }
+            
+            .section-title {
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <nav class="container">
+            <a href="/" class="logo">
+                <img src="vocam-transparent.png" alt="Vocam Logo">
+                Vocam
+            </a>
+            <a href="/" class="back-link">← Back to Home</a>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <div class="container">
+            <div class="content-wrapper">
+                <h1 class="page-title">Terms of Service</h1>
+                <div class="last-updated">
+                    <strong>Effective Date:</strong> August 12, 2025<br>
+                    <strong>Last Updated:</strong> August 12, 2025
+                </div>
+
+                <div class="section">
+                    <h2 class="section-title">Acceptance of Terms</h2>
+                    <p>By downloading, installing, or using the Vocam mobile application, you agree to be bound by these Terms of Service. If you do not agree to these Terms, do not use the Vocam app.</p>
+                </div>
+
+                <div class="section">
+                    <h2 class="section-title">Description of Service</h2>
+                    <p>Vocam is a language learning application that uses artificial intelligence and object detection technology to help users learn vocabulary in multiple languages through visual recognition of real-world objects.</p>
+                </div>
+
+                <div class="section">
+                    <h2 class="section-title">User Accounts</h2>
+                    <ul>
+                        <li>You must provide accurate and complete information when creating an account</li>
+                        <li>You are responsible for maintaining the confidentiality of your account credentials</li>
+                        <li>You must notify us immediately of any unauthorized use of your account</li>
+                        <li>You must be at least 13 years old to create an account (or have parental consent)</li>
+                    </ul>
+                </div>
+
+                <div class="section">
+                    <h2 class="section-title">Permitted Use</h2>
+                    <p>You may use Vocam for:</p>
+                    <ul>
+                        <li>Personal language learning purposes</li>
+                        <li>Educational activities</li>
+                        <li>Non-commercial use in accordance with these Terms</li>
+                    </ul>
+                </div>
+
+                <div class="section">
+                    <h2 class="section-title">Prohibited Use</h2>
+                    <p>You may NOT:</p>
+                    <ul>
+                        <li>Use Vocam app for any illegal or unauthorized purpose</li>
+                        <li>Reverse engineer, decompile, or attempt to extract the source code</li>
+                        <li>Share, distribute, or resell your account access</li>
+                        <li>Upload malicious code or attempt to harm the Vocam app's functionality</li>
+                        <li>Use Vocam app to harass, abuse, or harm others</li>
+                        <li>Violate any applicable laws or regulations</li>
+                    </ul>
+                </div>
+
+                <div class="section">
+                    <h2 class="section-title">Intellectual Property</h2>
+                    <ul>
+                        <li>Vocam and all related content are owned by İdil Doğa Türkmen</li>
+                        <li>You retain rights to content you create using the Vocam app</li>
+                        <li>We grant you a limited, non-exclusive license to use the Vocam app</li>
+                        <li>Our trademarks, logos, and brand elements remain our property</li>
+                    </ul>
+                </div>
+
+                <div class="section">
+                    <h2 class="section-title">Camera and Microphone Usage</h2>
+                    <ul>
+                        <li>Vocam app requires camera access for object detection features</li>
+                        <li>Vocam app requires microphone access for pronunciation practice</li>
+                        <li>Images and audio are processed locally and/or through secure third-party APIs</li>
+                        <li>We do not store camera images or audio recordings beyond immediate processing needs</li>
+                    </ul>
+                </div>
+
+                <div class="section">
+                    <h2 class="section-title">Third-Party Services</h2>
+                    <p>Vocam app uses third-party services (Google Cloud APIs, Supabase) that have their own terms of service. You agree to comply with their terms when using our app.</p>
+                </div>
+
+                <div class="section">
+                    <h2 class="section-title">User Content and Data</h2>
+                    <ul>
+                        <li>You retain ownership of your learning progress and personal data</li>
+                        <li>You grant us permission to use your data to provide and improve the service</li>
+                        <li>You can delete your account and data at any time</li>
+                        <li>We may remove content that violates these Terms</li>
+                    </ul>
+                </div>
+
+                <div class="section">
+                    <h2 class="section-title">Disclaimers</h2>
+                    <ul>
+                        <li>Vocam app is provided "as is" without warranties of any kind</li>
+                        <li>We do not guarantee the accuracy of translations or object recognition</li>
+                        <li>Language learning results may vary by individual</li>
+                        <li>We are not liable for any loss of data or learning progress</li>
+                    </ul>
+                </div>
+
+                <div class="section">
+                    <h2 class="section-title">Limitation of Liability</h2>
+                    <p>To the maximum extent permitted by law:</p>
+                    <ul>
+                        <li>We are not liable for indirect, incidental, or consequential damages</li>
+                        <li>Our total liability is limited to the amount you paid for the Vocam app (if any)</li>
+                        <li>We are not responsible for third-party service outages or issues</li>
+                    </ul>
+                </div>
+
+                <div class="section">
+                    <h2 class="section-title">Service Availability</h2>
+                    <ul>
+                        <li>We strive to maintain high service availability but cannot guarantee uninterrupted access</li>
+                        <li>We may perform maintenance that temporarily affects service</li>
+                        <li>We reserve the right to modify or discontinue features with notice</li>
+                    </ul>
+                </div>
+
+                <div class="section">
+                    <h2 class="section-title">Termination</h2>
+                    <ul>
+                        <li>You may delete your account at any time</li>
+                        <li>We may suspend or terminate accounts that violate these Terms</li>
+                        <li>Upon termination, your right to use the Vocam app ceases immediately</li>
+                        <li>Provisions regarding intellectual property and liability survive termination</li>
+                    </ul>
+                </div>
+
+                <div class="section">
+                    <h2 class="section-title">Privacy</h2>
+                    <p>Your privacy is important to us. Please review our <a href="/privacy-policy.html" style="color: var(--primary-medium); text-decoration: none; font-weight: 500;">Privacy Policy</a> to understand how we collect and use your information.</p>
+                </div>
+
+                <div class="section">
+                    <h2 class="section-title">Updates to Terms</h2>
+                    <p>We may modify these Terms at any time. We will notify users of significant changes through the Vocam app or email. Continued use of the Vocam app constitutes acceptance of modified Terms.</p>
+                </div>
+
+                <div class="section">
+                    <h2 class="section-title">Governing Law</h2>
+                    <p>These Terms are governed by the laws of the United States and the State of California. Any disputes will be resolved in the courts of the United States, with jurisdiction in California.</p>
+                </div>
+
+                <div class="section">
+                    <h2 class="section-title">Severability</h2>
+                    <p>If any provision of these Terms is found to be unenforceable, the remaining provisions will continue to be valid and enforceable.</p>
+                </div>
+
+                <div class="contact-info">
+                    <h3>Contact Information</h3>
+                    <p>For questions about these Terms of Service, contact us at:</p>
+                    <p>
+                        <strong>Email:</strong> <a href="mailto:idil08idil@gmail.com">idil08idil@gmail.com</a><br>
+                        <strong>Website:</strong> <a href="https://vocam.app">vocam.app</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Vocam. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

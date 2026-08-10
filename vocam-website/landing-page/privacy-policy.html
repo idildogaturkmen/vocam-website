@@ -234,7 +234,7 @@
                 <h1 class="page-title">Privacy Policy</h1>
                 <div class="last-updated">
                     <strong>Effective Date:</strong> August 12, 2025<br>
-                    <strong>Last Updated:</strong> August 12, 2025
+                    <strong>Last Updated:</strong> August 10, 2026
                 </div>
 
                 <div class="section">
@@ -255,8 +255,8 @@
 
                     <h3 class="subsection-title">Information Collected Automatically</h3>
                     <ul>
-                        <li><strong>Camera Data:</strong> Images captured for object detection are processed locally on your device and are not stored or transmitted to our servers</li>
-                        <li><strong>Audio Data:</strong> Voice recordings for pronunciation practice are processed locally and are not stored or transmitted to our servers</li>
+                        <li><strong>Camera / Image Data:</strong> Photos you take or upload for object detection are sent securely through our backend to <strong>Google Cloud Vision</strong> for recognition. We do not keep these images on Vocam servers after processing for the feature request.</li>
+                        <li><strong>Audio Data:</strong> Voice recordings used for pronunciation practice are sent securely through our backend to <strong>Google Cloud Speech-to-Text</strong> for recognition. We do not keep these recordings on Vocam servers after processing for the feature request.</li>
                         <li><strong>Usage Data:</strong> App usage statistics, feature interactions, and performance data</li>
                         <li><strong>Device Information:</strong> Device model, operating system, app version, and unique device identifiers</li>
                     </ul>
@@ -277,12 +277,13 @@
 
                 <div class="section">
                     <h2 class="section-title">Third-Party Services</h2>
-                    <p>Vocam integrates with the following third-party services:</p>
+                    <p>Vocam integrates with the following third-party services. Camera images and pronunciation audio are transmitted to Google for processing (they are not processed only on your device):</p>
                     <ul>
-                        <li><strong>Google Cloud Vision API:</strong> For object detection (images processed on Google's servers)</li>
-                        <li><strong>Google Cloud Speech-to-Text API:</strong> For speech recognition (audio processed on Google's servers)</li>
-                        <li><strong>Google Cloud Text-to-Speech API:</strong> For pronunciation audio generation</li>
-                        <li><strong>Supabase:</strong> For user data storage and authentication</li>
+                        <li><strong>Google Cloud Vision API:</strong> Object detection — images are processed on Google's servers</li>
+                        <li><strong>Google Cloud Translation API:</strong> Word and sentence translation</li>
+                        <li><strong>Google Cloud Speech-to-Text API:</strong> Pronunciation recognition — audio is processed on Google's servers</li>
+                        <li><strong>Google Cloud Text-to-Speech API:</strong> Pronunciation audio generation (when used)</li>
+                        <li><strong>Supabase:</strong> Account authentication, vocabulary/progress storage, and secure API proxying</li>
                     </ul>
                     <p>These services have their own privacy policies governing the use of your information.</p>
                 </div>
@@ -298,7 +299,7 @@
                     <ul>
                         <li><strong>Account Data:</strong> Retained until you delete your account</li>
                         <li><strong>Learning Progress Data:</strong> Retained until account deletion</li>
-                        <li><strong>Camera/Audio Data:</strong> Not stored beyond processing for immediate feature functionality</li>
+                        <li><strong>Camera/Audio Data:</strong> Sent to Google for immediate feature processing; not retained on Vocam servers after the request completes</li>
                         <li><strong>Usage Analytics:</strong> Retained for 24 months</li>
                         <li><strong>Device Information:</strong> Retained for 12 months</li>
                     </ul>

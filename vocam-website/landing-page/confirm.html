@@ -305,25 +305,29 @@
             <!-- Success State -->
             <div class="success-state" id="successState">
                 <div class="success-icon"></div>
-                <h2 class="title">Email Confirmed!</h2>
-                <p class="subtitle">Your account has been successfully verified. Get ready to start learning languages with the Vocam mobile app!</p>
+                <h2 class="title" id="successTitle">Email Confirmed!</h2>
+                <p class="subtitle" id="successSubtitle">Your account is verified. Open Vocam on your Android phone and Sign In.</p>
                 
                 <div class="action-buttons">
-                    <button class="btn-primary" id="downloadAppBtn">Download Vocam</button>
+                    <button class="btn-primary" id="downloadAppBtn">Open Vocam on Google Play</button>
                 </div>
 
                 <div class="app-download-section">
                     <div class="download-notice">
-                        The full Vocam experience is coming soon to Google Play Store! You'll be able to use your camera to detect objects and learn vocabulary in 44+ languages.
+                        Closed testing link: after you opt in, install Vocam from Google Play, then Sign In with this email.
                     </div>
-                    <div style="margin-top: 1rem; padding: 1rem; background: #f8f9fa; border-radius: 10px; font-size: 0.9rem; color: #6b7280;">
-                        <strong>📧 You'll be notified via email when the app is available for download.</strong>
-                    </div>
+                </div>
+
+                <div id="recoveryForm" style="display:none; text-align:left; margin-top:1.5rem;">
+                    <label style="display:block; margin-bottom:0.4rem; font-weight:600;">Set a new password</label>
+                    <input id="newPassword" type="password" minlength="6" placeholder="New password (min 6 characters)" style="width:100%; padding:0.75rem; border:1px solid #e5e7eb; border-radius:10px; margin-bottom:0.75rem;" />
+                    <button class="btn-primary" id="savePasswordBtn" type="button">Save password</button>
+                    <p id="recoveryMessage" class="help-text" style="margin-top:0.75rem;"></p>
                 </div>
 
                 <div class="help-section">
                     <p class="help-text">
-                        Need help? <a href="mailto:idil08idil@gmail.com" class="contact-link">Contact support</a>
+                        Need help? <a href="mailto:vocam.app@gmail.com" class="contact-link">Contact support</a>
                     </p>
                 </div>
             </div>
@@ -348,79 +352,116 @@
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        // Get URL parameters to check confirmation status
-        const urlParams = new URLSearchParams(window.location.search);
-        const confirmationType = urlParams.get('type');
-        const token = urlParams.get('token');
-        const error = urlParams.get('error');
-        const errorDescription = urlParams.get('error_description');
+        const SUPABASE_URL = 'https://wotrxczhjxfhqznnjxgq.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndvdHJ4Y3poanhmaHF6bm5qeGdxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE5MTcxNjcsImV4cCI6MjA2NzQ5MzE2N30.2bHXOE9EFVBMRmReJ6jMu0XOWmR_LrxArZuZc5O5pq8';
+        const PLAY_STORE_URL = 'https://play.google.com/store/apps/details?id=app.vocam.mobile.dev';
+        const CLOSED_TEST_URL = 'https://play.google.com/apps/testing/app.vocam.mobile.dev';
 
-        // Elements
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const urlParams = new URLSearchParams(window.location.search);
+        const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ''));
+
         const loadingState = document.getElementById('loadingState');
         const successState = document.getElementById('successState');
         const errorState = document.getElementById('errorState');
+        const recoveryForm = document.getElementById('recoveryForm');
+        const successTitle = document.getElementById('successTitle');
+        const successSubtitle = document.getElementById('successSubtitle');
 
-        // Simulate processing delay for better UX
-        setTimeout(() => {
+        function showSuccess(title, subtitle, showRecovery) {
             loadingState.classList.remove('active');
-            
-            // Check if there's an error parameter
-            if (error || errorDescription) {
-                // Show error state
-                errorState.classList.add('active');
-                console.log('Email confirmation failed:', error, errorDescription);
-            } else if (confirmationType === 'signup' || token) {
-                // Show success state for signup confirmation or if token is present
-                successState.classList.add('active');
-                console.log('Email confirmation successful');
-            } else {
-                // Default to success if no specific error indicators
-                successState.classList.add('active');
-                console.log('Email confirmation completed');
-            }
-        }, 2000);
-
-        // Track page view for analytics (optional)
-        if (typeof gtag !== 'undefined') {
-            gtag('event', 'page_view', {
-                page_title: 'Email Confirmation',
-                page_location: window.location.href
-            });
+            errorState.classList.remove('active');
+            successState.classList.add('active');
+            if (title) successTitle.textContent = title;
+            if (subtitle) successSubtitle.textContent = subtitle;
+            if (showRecovery) recoveryForm.style.display = 'block';
         }
 
-        // Handle back button navigation
-        window.addEventListener('popstate', function(event) {
-            // Redirect to home if user hits back button
-            window.location.href = '/';
-        });
+        function showError(subtitle) {
+            loadingState.classList.remove('active');
+            successState.classList.remove('active');
+            errorState.classList.add('active');
+            if (subtitle) {
+                const el = errorState.querySelector('.subtitle');
+                if (el) el.textContent = subtitle;
+            }
+        }
 
-        // Handle download app buttons
         function setupDownloadButtons() {
-            const downloadBtns = document.querySelectorAll('#downloadAppBtn, #downloadAppBtnError');
-            
-            downloadBtns.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    // TODO: Replace with actual Play Store URL when app is published
-                    // Update the package name in the URL below to match your app's package name
-                    // From app.config.js: "com.yourcompany.vocamlearning" 
-                    const playStoreUrl = 'https://play.google.com/store/apps/details?id=app.vocam';
-                    
-                    // For now, show a message that the app is coming soon
-                    // When the app is published, remove this alert and uncomment the redirect below
-                    
-                    alert('📱 Vocam mobile app is coming soon to Google Play Store!\n\n✅ Your email is confirmed and ready.');
-                    
-                    // Uncomment this line when the app is published:
-                    // window.open(playStoreUrl, '_blank');
+            document.querySelectorAll('#downloadAppBtn, #downloadAppBtnError').forEach((btn) => {
+                btn.addEventListener('click', function () {
+                    window.open(PLAY_STORE_URL, '_blank');
                 });
             });
         }
 
-        // Initialize download buttons after page loads
-        setTimeout(() => {
+        async function handleAuthRedirect() {
+            const error = urlParams.get('error') || hashParams.get('error');
+            const errorDescription = urlParams.get('error_description') || hashParams.get('error_description');
+            if (error || errorDescription) {
+                showError(errorDescription || error || 'Confirmation failed.');
+                setupDownloadButtons();
+                return;
+            }
+
+            const code = urlParams.get('code');
+            if (code) {
+                const { error: exchangeError } = await supabaseClient.auth.exchangeCodeForSession(code);
+                if (exchangeError) {
+                    showError(exchangeError.message);
+                    setupDownloadButtons();
+                    return;
+                }
+            }
+
+            // Legacy hash tokens from email links
+            const accessToken = hashParams.get('access_token');
+            const refreshToken = hashParams.get('refresh_token');
+            if (accessToken && refreshToken) {
+                const { error: sessionError } = await supabaseClient.auth.setSession({
+                    access_token: accessToken,
+                    refresh_token: refreshToken,
+                });
+                if (sessionError) {
+                    showError(sessionError.message);
+                    setupDownloadButtons();
+                    return;
+                }
+            }
+
+            const type = urlParams.get('type') || hashParams.get('type') || '';
+            if (type === 'recovery') {
+                showSuccess('Reset your password', 'Choose a new password, then Sign In inside the Vocam app.', true);
+                document.getElementById('savePasswordBtn').addEventListener('click', async () => {
+                    const password = document.getElementById('newPassword').value;
+                    const message = document.getElementById('recoveryMessage');
+                    if (!password || password.length < 6) {
+                        message.textContent = 'Password must be at least 6 characters.';
+                        return;
+                    }
+                    const { error: updateError } = await supabaseClient.auth.updateUser({ password });
+                    message.textContent = updateError
+                        ? updateError.message
+                        : 'Password updated. Open Vocam and Sign In.';
+                });
+            } else {
+                showSuccess(
+                    'Email Confirmed!',
+                    'Your account is ready. Open Vocam on Android and Sign In with this email.',
+                    false
+                );
+            }
             setupDownloadButtons();
-        }, 2100);
+        }
+
+        handleAuthRedirect().catch((err) => {
+            console.error(err);
+            showError('Something went wrong while confirming your email.');
+            setupDownloadButtons();
+        });
     </script>
+
 </body>
 </html>

@@ -295,18 +295,19 @@
                 Vocam
             </div>
 
-            <!-- Loading State -->
-            <div class="loading active" id="loadingState">
+            <!-- Success is the default: tapping the email already confirms the account
+                 before this page loads. Never block on a CDN or spinner. -->
+            <div class="loading" id="loadingState">
                 <div class="spinner"></div>
-                <h2 class="title">Confirming Your Email...</h2>
-                <p class="subtitle">Please wait while we verify your account.</p>
+                <h2 class="title">One moment…</h2>
+                <p class="subtitle">Finishing password reset.</p>
             </div>
 
             <!-- Success State -->
-            <div class="success-state" id="successState">
+            <div class="success-state active" id="successState">
                 <div class="success-icon"></div>
-                <h2 class="title" id="successTitle">Email Confirmed!</h2>
-                <p class="subtitle" id="successSubtitle">Your account is verified. Open Vocam on your Android phone and Sign In.</p>
+                <h2 class="title" id="successTitle">Email confirmed</h2>
+                <p class="subtitle" id="successSubtitle">You can close this page. Open Vocam on your Android phone and Sign In with this email — even if this page was slow to load.</p>
                 
                 <div class="action-buttons">
                     <button class="btn-primary" id="downloadAppBtn">Open Vocam on Google Play</button>
@@ -352,14 +353,15 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <noscript>
+        <p style="text-align:center;margin-top:1rem;">If you opened this from your Vocam email, your account is confirmed. Open the app and Sign In.</p>
+    </noscript>
+
     <script>
         const SUPABASE_URL = 'https://wotrxczhjxfhqznnjxgq.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndvdHJ4Y3poanhmaHF6bm5qeGdxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE5MTcxNjcsImV4cCI6MjA2NzQ5MzE2N30.2bHXOE9EFVBMRmReJ6jMu0XOWmR_LrxArZuZc5O5pq8';
         const PLAY_STORE_URL = 'https://play.google.com/store/apps/details?id=app.vocam.mobile.dev';
-        const CLOSED_TEST_URL = 'https://play.google.com/apps/testing/app.vocam.mobile.dev';
 
-        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         const urlParams = new URLSearchParams(window.location.search);
         const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ''));
 
@@ -376,7 +378,7 @@
             successState.classList.add('active');
             if (title) successTitle.textContent = title;
             if (subtitle) successSubtitle.textContent = subtitle;
-            if (showRecovery) recoveryForm.style.display = 'block';
+            recoveryForm.style.display = showRecovery ? 'block' : 'none';
         }
 
         function showError(subtitle) {
@@ -397,70 +399,77 @@
             });
         }
 
-        async function handleAuthRedirect() {
+        async function updatePassword(accessToken, password) {
+            const res = await fetch(SUPABASE_URL + '/auth/v1/user', {
+                method: 'PUT',
+                headers: {
+                    apikey: SUPABASE_ANON_KEY,
+                    Authorization: 'Bearer ' + accessToken,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ password: password }),
+            });
+            const data = await res.json().catch(function () { return {}; });
+            if (!res.ok) {
+                throw new Error(data.msg || data.error_description || data.message || 'Could not update password');
+            }
+        }
+
+        function handleAuthRedirect() {
+            setupDownloadButtons();
+
             const error = urlParams.get('error') || hashParams.get('error');
             const errorDescription = urlParams.get('error_description') || hashParams.get('error_description');
             if (error || errorDescription) {
                 showError(errorDescription || error || 'Confirmation failed.');
-                setupDownloadButtons();
                 return;
             }
 
-            const code = urlParams.get('code');
-            if (code) {
-                const { error: exchangeError } = await supabaseClient.auth.exchangeCodeForSession(code);
-                if (exchangeError) {
-                    showError(exchangeError.message);
-                    setupDownloadButtons();
-                    return;
-                }
-            }
-
-            // Legacy hash tokens from email links
-            const accessToken = hashParams.get('access_token');
-            const refreshToken = hashParams.get('refresh_token');
-            if (accessToken && refreshToken) {
-                const { error: sessionError } = await supabaseClient.auth.setSession({
-                    access_token: accessToken,
-                    refresh_token: refreshToken,
-                });
-                if (sessionError) {
-                    showError(sessionError.message);
-                    setupDownloadButtons();
-                    return;
-                }
-            }
-
             const type = urlParams.get('type') || hashParams.get('type') || '';
+            const accessToken = hashParams.get('access_token');
+
             if (type === 'recovery') {
+                if (!accessToken) {
+                    showError('This reset link is missing a token. Open Forgot password in Vocam and use a new email.');
+                    return;
+                }
                 showSuccess('Reset your password', 'Choose a new password, then Sign In inside the Vocam app.', true);
-                document.getElementById('savePasswordBtn').addEventListener('click', async () => {
+                document.getElementById('savePasswordBtn').addEventListener('click', async function () {
                     const password = document.getElementById('newPassword').value;
                     const message = document.getElementById('recoveryMessage');
                     if (!password || password.length < 6) {
                         message.textContent = 'Password must be at least 6 characters.';
                         return;
                     }
-                    const { error: updateError } = await supabaseClient.auth.updateUser({ password });
-                    message.textContent = updateError
-                        ? updateError.message
-                        : 'Password updated. Open Vocam and Sign In.';
+                    try {
+                        await updatePassword(accessToken, password);
+                        message.textContent = 'Password updated. Open Vocam and Sign In.';
+                    } catch (updateError) {
+                        message.textContent = updateError.message || 'Could not update password.';
+                    }
                 });
-            } else {
-                showSuccess(
-                    'Email Confirmed!',
-                    'Your account is ready. Open Vocam on Android and Sign In with this email.',
-                    false
-                );
+                return;
             }
-            setupDownloadButtons();
+
+            // Signup / magic-link: Supabase already confirmed the email when this
+            // page was opened. Do not wait on extra network calls.
+            showSuccess(
+                'Email confirmed',
+                'You can close this page. Open Vocam on Android and Sign In with this email — even if this page was slow to load.',
+                false
+            );
         }
 
-        handleAuthRedirect().catch((err) => {
+        try {
+            handleAuthRedirect();
+        } catch (err) {
             console.error(err);
-            showError('Something went wrong while confirming your email.');
-            setupDownloadButtons();
-        });
+            showSuccess(
+                'Email confirmed',
+                'If you opened this from your Vocam email, your account is ready. Open the app and Sign In.',
+                false
+            );
+        }
     </script>
 
 </body>
